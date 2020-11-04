@@ -125,10 +125,18 @@ namespace Program {
     class Program {
         // gets a random word from word.txt in the same folder
         public static string getRandomWord() {
-            string[] lines = File.ReadAllLines("words.txt");  // read all lines
-            Random rnd = new Random();
-            int value = rnd.Next(0,lines.Length); // pick a random line
-            return lines[value]; // return value of that line
+            try {
+                string[] lines = File.ReadAllLines("words.txt");  // read all lines
+                Random rnd = new Random();
+                int value = rnd.Next(0,lines.Length); // pick a random line
+                return lines[value]; // return value of that line
+            }catch(Exception err) {
+                // Read file went wrong, probably is words.txt not present. Fallback on some handpicked words
+                string[] lines = new String[]{"bord","dator","människa","groda","jesus"};  // read all lines
+                Random rnd = new Random();
+                int value = rnd.Next(0,lines.Length); // pick a random line
+                return lines[value];
+            }
         }
 
         static void Main(string[] args) {
@@ -141,6 +149,10 @@ namespace Program {
                     since t is a string and guessLetter take a char as value i pick the first element in the string, 
                     this makes sense since if i inputed: "abc" i wouldn't be able to guess that anyways, so it guesses 'a' instead
                 */
+                if(guessedLetter.Length == 0) { // Check so the uses didn't input an empty string
+                    ren.setMessage("Du måste gissa en bokstav"); 
+                    continue;
+                } 
                 if(!game.guessLetter(guessedLetter[0])) { // Guess the letter and check if that letter could be guessed, if not set message too: "Du har redan valt den bokstaven"
                     ren.setMessage("Du har redan valt den bokstaven"); 
                 } 
